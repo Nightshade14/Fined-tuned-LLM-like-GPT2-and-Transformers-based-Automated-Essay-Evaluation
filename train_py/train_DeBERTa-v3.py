@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, cohen_kappa_score
 from datasets import Dataset
 from transformers import AutoTokenizer, TrainerCallback, AdamW, TrainingArguments, Trainer, AutoModelForSequenceClassification
