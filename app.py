@@ -1,12 +1,17 @@
+from pydantic import BaseModel
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+
+class Data(BaseModel):
+	essay: str
+	model: str
 
 app = FastAPI()
 
 @app.get("/")
 def get_home_page():
-	return "Welcome to the home page!!!"
+	return "Welcome to the router!!!"
 
-@app.get("/models/{model_id}")
-def return_selected_model_id(model_id):
-	return f"{model_id}"
+@app.post("/evaluate")
+def evaluate_essay(data: Data):
+	data_dict = data.dict()
+	return 1
