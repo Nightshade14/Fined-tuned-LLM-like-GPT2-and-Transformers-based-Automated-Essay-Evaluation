@@ -1,9 +1,5 @@
-from pydantic import BaseModel
 from fastapi import FastAPI
-
-class Data(BaseModel):
-	essay: str
-	model: str
+from model.Data import Data
 
 app = FastAPI()
 
@@ -13,5 +9,5 @@ def get_home_page():
 
 @app.post("/evaluate")
 def evaluate_essay(data: Data):
-	data_dict = data.dict()
+	data_dict = data.model_dump()
 	return 1
