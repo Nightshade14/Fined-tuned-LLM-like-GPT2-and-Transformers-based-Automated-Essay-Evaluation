@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from model.Data import Data
+from data_schema.Data import Data
 
 app = FastAPI()
 
