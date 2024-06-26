@@ -10,4 +10,4 @@ def get_home_page():
 @app.post("/evaluate")
 def evaluate_essay(data: Data):
 	data_dict = data.model_dump()
-	return 1
+	return data_dict
