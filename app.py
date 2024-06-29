@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from data_schema.Data import Data
+from transformers import AutoModelForSequenceClassification
 
 app = FastAPI()
 
@@ -10,4 +11,9 @@ def get_home_page():
 @app.post("/evaluate")
 def evaluate_essay(data: Data):
 	data_dict = data.model_dump()
-	return data_dict
+	NUM_CLASSES = 6
+	essay = data_dict.get("essay")
+	model = data_dict.get("model")
+	model = AutoModelForSequenceClassification.from_pretrained('./model/', num_labels=NUM_CLASSES)
+
+	return type(data_dict)
