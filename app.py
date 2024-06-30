@@ -13,7 +13,6 @@ def evaluate_essay(data: Data):
 	data_dict = data.model_dump()
 	NUM_CLASSES = 6
 	essay = data_dict.get("essay")
-	model = data_dict.get("model")
-	model = AutoModelForSequenceClassification.from_pretrained('./model/', num_labels=NUM_CLASSES)
-
+	model_id = data_dict.get("model")
+	model = AutoModelForSequenceClassification.from_pretrained('./model/my_model', num_labels=NUM_CLASSES)
 	return type(data_dict)
