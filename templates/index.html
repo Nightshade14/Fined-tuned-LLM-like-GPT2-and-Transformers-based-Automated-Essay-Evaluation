@@ -1,14 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>Automated Essay Evaluation with AI</title>
+	<link rel="stylesheet" href="index.css">
 </head>
 <title>
 	LLM essay evaluation
 </title>
+
 <body>
-	<h1>Hello, this is the index.html file!!!</h1>
+	<h1>Welcome to Automated Essay Evaluation Service!</h1>
+	<h3>The essay would be grade from 1 to 6. Please fill the following form:</h3>
+	<div>
+		<form action="" method="post">
+			<div>
+				<div>
+					<label for="essay">Essay content:</label>
+					<input type="text" name="essay" id="essay">
+				</div>
+				<div>
+					<label for="model_id">Select the model for evaluation:</label>
+					<select  name="model_id" id="model_id">
+						<option value="GPT-2">GPT-2</option>
+						<option value="DeBERTa-v3">DeBERTa-v3</option>
+						<option value="DistilBERT">DistilBERT</option>
+						<option value="LSTM">LSTM</option>
+					</select>
+				</div>
+				<br />
+				<input type="submit" value="Evaluate">
+			</div>
+		</form>
+	</div>
 </body>
+
 </html>
