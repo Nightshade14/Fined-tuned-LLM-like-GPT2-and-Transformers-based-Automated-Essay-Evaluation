@@ -2,4 +2,4 @@ from pydantic import BaseModel
 
 class Data(BaseModel):
 	essay: str
-	model: str
+	my_model_id: str
