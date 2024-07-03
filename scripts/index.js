@@ -2,9 +2,6 @@ document.getElementById("evaluateButton").addEventListener("click", async functi
     const essay = document.getElementById("essay").value;
     const modelId = document.getElementById("model_id").value;
 
-    console.log("Essay:", essay);
-    console.log("Model ID:", modelId);
-
     const response = await fetch("http://127.0.0.1:8000/evaluate/", {
         method: "POST",
         headers: {
@@ -17,5 +14,6 @@ document.getElementById("evaluateButton").addEventListener("click", async functi
     });
 
     const result = await response.json();
-    document.getElementById("result").innerText = "Evaluation Result: " + (result.my_model_id || result.error);
+    console.log("Evaluation Result:" + result.predicted_class)
+    document.getElementById("result").innerText = "Evaluation Result: " + (result.predicted_class || result.error) + "/5";
 });
