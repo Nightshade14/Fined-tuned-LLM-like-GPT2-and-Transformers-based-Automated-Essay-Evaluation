@@ -5,9 +5,20 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import traceback
 
+
+MODEL_ID_TO_PATH_MAPPING = {
+	"DeBERTa-v3": "deBERTa-v3",
+	"GPT-2": "my_gpt_2",
+	"LSTM": "my_lstm",
+	"DistilBERT": "my_distilbert"
+}
+
+
+MODELS_AND_TOKENIZERS_LIST = ["deBERTa-v3"]
+
+
 def get_tokenizers_and_models():
 	import os
-	from transformers import AutoTokenizer, AutoModelForSequenceClassification
 	import boto3
 
 	# Set up AWS credentials (make sure you have the necessary permissions)
@@ -19,32 +30,42 @@ def get_tokenizers_and_models():
 
 	# Define the S3 bucket and key for the model
 	S3_BUCKET = 'XXXXXXXXXXXXXXXXXXX'
-	S3_KEY_PREFIX = 'path/to/distilbert'
+	S3_MODEL_PREFIX = './models/'
+	S3_TOKENIZER_PREFIX = './tokenizers/'
 
 	# Define the local path to save the model
-	LOCAL_MODEL_PATH = 'path/to/local/model'
-	LOCAL_TOKENIZER_PATH = 'path/to/local/tokenizer'
+	LOCAL_MODEL_PATH = "./models/"
+	LOCAL_TOKENIZER_PATH = "./tokenizers/"
 
-	# Check if the model and tokenizer are available locally
-	if os.path.exists(LOCAL_MODEL_PATH) and os.path.exists(LOCAL_TOKENIZER_PATH):
-		print("Model and tokenizer found locally.")
-		tokenizer = AutoTokenizer.from_pretrained(LOCAL_TOKENIZER_PATH)
-		model = AutoModelForSequenceClassification.from_pretrained(LOCAL_MODEL_PATH)
-	else:
-		print("Model and tokenizer not found locally. Downloading from S3...")
-		
-		# Download the model and tokenizer from S3
-		s3_client.download_file(S3_BUCKET, f"{S3_KEY_PREFIX}/tokenizer/", f"{LOCAL_MODEL_PATH}/tokenizer.json")
-		s3_client.download_file(S3_BUCKET, f"{S3_KEY_PREFIX}/config.json", f"{LOCAL_MODEL_PATH}/config.json")
-		s3_client.download_file(S3_BUCKET, f"{S3_KEY_PREFIX}/pytorch_model.bin", f"{LOCAL_MODEL_PATH}/pytorch_model.bin")
-		
-		# Load the model and tokenizer
-		tokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL_PATH)
-		model = AutoModelForSequenceClassification.from_pretrained(LOCAL_MODEL_PATH)
-		
-	print("Model and tokenizer loaded successfully.")
+	for model_and_tokenizer in MODELS_AND_TOKENIZERS_LIST:
+		# Check if the model and tokenizer are available locally
+		if os.path.exists(f"{LOCAL_MODEL_PATH}{model_and_tokenizer}") and os.path.exists(f"{LOCAL_TOKENIZER_PATH}{model_and_tokenizer}"):
+			print(f"Model and tokenizer found locally for {model_and_tokenizer}.")
+		elif not os.path.exists(f"{LOCAL_MODEL_PATH}{model_and_tokenizer}"):
+			print(f"Model not found locally for {model_and_tokenizer}. Downloading from S3...")
 
+			s3_client.download_file(S3_BUCKET, f"{S3_MODEL_PREFIX}{model_and_tokenizer}.zip", f"{LOCAL_MODEL_PATH}{model_and_tokenizer}.zip")
+			os.system(f"unzip {LOCAL_MODEL_PATH}{model_and_tokenizer}.zip")
+			os.system(f"rm {LOCAL_MODEL_PATH}{model_and_tokenizer}.zip")
+		elif not os.path.exists(f"{LOCAL_TOKENIZER_PATH}{model_and_tokenizer}"):
+			print(f"Tokenizer not found locally for {model_and_tokenizer}. Downloading from S3...")
 
+			s3_client.download_file(S3_BUCKET, f"{S3_TOKENIZER_PREFIX}{model_and_tokenizer}.zip", f"{LOCAL_TOKENIZER_PATH}{model_and_tokenizer}.zip")
+			os.system(f"unzip {LOCAL_TOKENIZER_PATH}{model_and_tokenizer}.zip")
+			os.system(f"rm {LOCAL_TOKENIZER_PATH}{model_and_tokenizer}.zip")
+		else:
+			print(f"Model and tokenizer not found locally for {model_and_tokenizer}. Downloading from S3...")
+
+			s3_client.download_file(S3_BUCKET, f"{S3_MODEL_PREFIX}{model_and_tokenizer}.zip", f"{LOCAL_MODEL_PATH}{model_and_tokenizer}.zip")
+			s3_client.download_file(S3_BUCKET, f"{S3_TOKENIZER_PREFIX}{model_and_tokenizer}.zip", f"{LOCAL_TOKENIZER_PATH}{model_and_tokenizer}.zip")
+
+			os.system(f"unzip {LOCAL_MODEL_PATH}{model_and_tokenizer}.zip")
+			os.system(f"unzip {LOCAL_TOKENIZER_PATH}{model_and_tokenizer}.zip")
+
+			os.system(f"rm {LOCAL_MODEL_PATH}{model_and_tokenizer}.zip")
+			os.system(f"rm {LOCAL_TOKENIZER_PATH}{model_and_tokenizer}.zip")
+
+get_tokenizers_and_models()
 
 app = FastAPI()
 
@@ -63,20 +84,12 @@ def get_home_page():
 @app.post("/evaluate")
 def evaluate_essay(request_data: Data):
 	try:
-
-		model_id_to_path_mapping = {
-			"DeBERTa-v3": "deBERTa-v3",
-			"GPT-2": "my_gpt_2",
-			"LSTM": "my_lstm",
-			"DistilBERT": "my_distilbert"
-		}
-
 		data_dict = request_data.model_dump()
 		essay = data_dict.get("essay")
 		model_id = data_dict.get("my_model_id")
 
-		TOKENIZER_PATH = "".join(["./models/", model_id_to_path_mapping.get(model_id)])
-		MODEL_PATH = "".join(["./models/", model_id_to_path_mapping.get(model_id)]) 
+		TOKENIZER_PATH = "".join(["./models/", MODEL_ID_TO_PATH_MAPPING.get(model_id)])
+		MODEL_PATH = "".join(["./models/", MODEL_ID_TO_PATH_MAPPING.get(model_id)]) 
 		NUM_CLASSES = 6
 
 		tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH)
