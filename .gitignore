@@ -2,3 +2,4 @@
 **/*.csv
 **/models/**
 **/tokenizers/**/**
+**/.env
