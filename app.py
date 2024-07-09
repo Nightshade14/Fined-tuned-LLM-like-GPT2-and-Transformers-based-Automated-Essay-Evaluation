@@ -4,6 +4,18 @@ from data_schema.Data import Data
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import traceback
+from dotenv import load_dotenv
+import os
+
+# Load from the root directory
+load_dotenv()
+
+# Load from a config directory
+load_dotenv(dotenv_path=os.path.join('config', '.env'))
+
+MODEL_BASE_PATH = os.getenv('MODEL_PATH')
+TOKENIZER_BASE_PATH = os.getenv('TOKENIZER_PATH')
+
 
 
 MODEL_ID_TO_PATH_MAPPING = {
@@ -34,8 +46,8 @@ def get_tokenizers_and_models():
 	S3_TOKENIZER_PREFIX = './tokenizers/'
 
 	# Define the local path to save the model
-	LOCAL_MODEL_PATH = "./models/"
-	LOCAL_TOKENIZER_PATH = "./tokenizers/"
+	LOCAL_MODEL_PATH = MODEL_BASE_PATH
+	LOCAL_TOKENIZER_PATH = TOKENIZER_BASE_PATH
 
 	for model_and_tokenizer in MODELS_AND_TOKENIZERS_LIST:
 		# Check if the model and tokenizer are available locally
@@ -88,8 +100,8 @@ def evaluate_essay(request_data: Data):
 		essay = data_dict.get("essay")
 		model_id = data_dict.get("my_model_id")
 
-		TOKENIZER_PATH = "".join(["./models/", MODEL_ID_TO_PATH_MAPPING.get(model_id)])
-		MODEL_PATH = "".join(["./models/", MODEL_ID_TO_PATH_MAPPING.get(model_id)]) 
+		TOKENIZER_PATH = "".join([TOKENIZER_BASE_PATH, MODEL_ID_TO_PATH_MAPPING.get(model_id)])
+		MODEL_PATH = "".join([MODEL_BASE_PATH, MODEL_ID_TO_PATH_MAPPING.get(model_id)]) 
 		NUM_CLASSES = 6
 
 		tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH)
