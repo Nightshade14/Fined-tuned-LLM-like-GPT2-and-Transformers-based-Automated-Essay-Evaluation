@@ -1,83 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from data_schema.Data import Data
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import traceback
 from dotenv import load_dotenv
 import os
+from data_schema.Data import Data
+from utils.artifacts_downloader import get_tokenizers_and_models
 
 # Load from the root directory
 load_dotenv()
 
 # Load from a config directory
-load_dotenv(dotenv_path=os.path.join('config', '.env'))
+load_dotenv(dotenv_path = os.path.join('config', '.env'))
 
 MODEL_BASE_PATH = os.getenv('MODEL_PATH')
 TOKENIZER_BASE_PATH = os.getenv('TOKENIZER_PATH')
 
-MODEL_ID_TO_PATH_MAPPING = {
-    "DeBERTa-v3": "deBERTa-v3",
-    "GPT-2": "my_gpt_2",
-    "LSTM": "my_lstm",
-    "DistilBERT": "my_distilbert"
-}
-
-MODELS_AND_TOKENIZERS_LIST = ["deBERTa-v3"]
-
-
-def get_tokenizers_and_models():
-    import os
-    import boto3
-
-    # Set up AWS credentials (make sure you have the necessary permissions)
-    session = boto3.Session(
-        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY')
-    )
-    s3_client = session.client('s3')
-
-    # Define the S3 bucket and key for the model
-    s3_bucket = 'XXXXXXXXXXXXXXXXXXX'
-    s3_model_prefix = './models/'
-    s3_tokenizer_prefix = './tokenizers/'
-
-    # Define the local path to save the model
-    local_model_path = MODEL_BASE_PATH
-    local_tokenizer_path = TOKENIZER_BASE_PATH
-
-    for model_and_tokenizer in MODELS_AND_TOKENIZERS_LIST:
-        # Check if the model and tokenizer are available locally
-        if os.path.exists(f"{local_model_path}{model_and_tokenizer}") and os.path.exists(
-            f"{local_tokenizer_path}{model_and_tokenizer}"):
-            print(f"Model and tokenizer found locally for {model_and_tokenizer}.")
-        elif not os.path.exists(f"{local_model_path}{model_and_tokenizer}"):
-            print(f"Model not found locally for {model_and_tokenizer}. Downloading from S3...")
-
-            s3_client.download_file(s3_bucket, f"{s3_model_prefix}{model_and_tokenizer}.zip",
-                                    f"{local_model_path}{model_and_tokenizer}.zip")
-            os.system(f"unzip {local_model_path}{model_and_tokenizer}.zip")
-            os.system(f"rm {local_model_path}{model_and_tokenizer}.zip")
-        elif not os.path.exists(f"{local_tokenizer_path}{model_and_tokenizer}"):
-            print(f"Tokenizer not found locally for {model_and_tokenizer}. Downloading from S3...")
-
-            s3_client.download_file(s3_bucket, f"{s3_tokenizer_prefix}{model_and_tokenizer}.zip",
-                                    f"{local_tokenizer_path}{model_and_tokenizer}.zip")
-            os.system(f"unzip {local_tokenizer_path}{model_and_tokenizer}.zip")
-            os.system(f"rm {local_tokenizer_path}{model_and_tokenizer}.zip")
-        else:
-            print(f"Model and tokenizer not found locally for {model_and_tokenizer}. Downloading from S3...")
-
-            s3_client.download_file(s3_bucket, f"{s3_model_prefix}{model_and_tokenizer}.zip",
-                                    f"{local_model_path}{model_and_tokenizer}.zip")
-            s3_client.download_file(s3_bucket, f"{s3_tokenizer_prefix}{model_and_tokenizer}.zip",
-                                    f"{local_tokenizer_path}{model_and_tokenizer}.zip")
-
-            os.system(f"unzip {local_model_path}{model_and_tokenizer}.zip")
-            os.system(f"unzip {local_tokenizer_path}{model_and_tokenizer}.zip")
-
-            os.system(f"rm {local_model_path}{model_and_tokenizer}.zip")
-            os.system(f"rm {local_tokenizer_path}{model_and_tokenizer}.zip")
+MODEL_ID_TO_PATH_MAPPING = os.getenv('MODEL_ID_TO_PATH_MAPPING')
 
 
 get_tokenizers_and_models()
