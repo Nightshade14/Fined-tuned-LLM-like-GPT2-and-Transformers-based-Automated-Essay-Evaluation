@@ -24,7 +24,7 @@ def get_tokenizers_and_models():
 
         # eventually, it will become MODEL_ID_TO_PATH_MAPPING.keys()
         # MODELS_AND_TOKENIZERS_LIST = os.getenv("MODEL_ID_TO_PATH_MAPPING").keys()
-        MODELS_AND_TOKENIZERS_LIST = ["deBERTa-v3"]
+        MODELS_AND_TOKENIZERS_LIST = ["deBERTa-v3", "my_distilbert"]
 
         MODEL_BASE_PATH = os.getenv('MODEL_PATH')
         TOKENIZER_BASE_PATH = os.getenv('TOKENIZER_PATH')
