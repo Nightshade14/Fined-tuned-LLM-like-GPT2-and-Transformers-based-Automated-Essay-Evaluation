@@ -8,29 +8,33 @@ import os
 from data_schema.Data import Data
 from utils.artifacts_downloader import get_tokenizers_and_models
 
+
+try:
 # Load from the root directory
-load_dotenv()
+    load_dotenv()
 
-# Load from a config directory
-load_dotenv(dotenv_path = os.path.join('config', '.env'))
+    # Load from a config directory
+    load_dotenv(dotenv_path = os.path.join('config', '.env'))
 
-MODEL_BASE_PATH = os.getenv('MODEL_PATH')
-TOKENIZER_BASE_PATH = os.getenv('TOKENIZER_PATH')
+    MODEL_BASE_PATH = os.getenv('MODEL_PATH')
+    TOKENIZER_BASE_PATH = os.getenv('TOKENIZER_PATH')
 
-MODEL_ID_TO_PATH_MAPPING = os.getenv('MODEL_ID_TO_PATH_MAPPING')
+    MODEL_ID_TO_PATH_MAPPING = os.getenv('MODEL_ID_TO_PATH_MAPPING')
 
 
-get_tokenizers_and_models()
+    get_tokenizers_and_models()
 
-app = FastAPI()
+    app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
+except Exception as e:
+    print(e)
 
 
 @app.get("/")
