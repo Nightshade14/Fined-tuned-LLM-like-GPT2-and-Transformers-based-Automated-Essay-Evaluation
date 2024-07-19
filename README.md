@@ -6,5 +6,6 @@ Essays represent a person's critical thinking. It provides a glimpse into a pers
 ## Overview
 
 ## Methodolgy & Strategic Design Decisions
+1. We chose to load all the models and tokenizers at the start of the server, so we can serve every request within a definitive range of latency.
 
 ## Impending work
