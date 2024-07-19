@@ -126,3 +126,36 @@ trainer = Trainer(
 )
 
 trainer.train()
+
+trainer.save_pretrained('./saved_models/distilbert')
+
+import os
+os.system('zip -r ./saved_models/distilbert.zip ./saved_models/distilbert')
+
+import boto3
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Load from a config directory
+load_dotenv(dotenv_path = os.path.join('config', '.env'))
+
+# Set up AWS credentials (make sure you have the necessary permissions)
+session = boto3.Session(
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+)
+s3_client = session.client('s3')
+
+# Define the S3 bucket and key for the model
+s3_bucket = os.getenv('S3_BUCKET')
+s3_model_prefix = os.getenv('S3_MODEL_PREFIX')
+s3_tokenizer_prefix = os.getenv('S3_TOKENIZER_PREFIX')
+
+
+from datetime import datetime
+iso_timestamp = datetime.now().isoformat()
+
+s3_client.upload_file("./saved_models/distilbert.zip", s3_bucket, iso_timestamp + "distilbert")
+
+os.system('rm ./saved_models/distilbert.zip')
