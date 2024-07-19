@@ -150,6 +150,6 @@ s3_tokenizer_prefix = os.getenv('S3_TOKENIZER_PREFIX')
 from datetime import datetime
 iso_timestamp = datetime.now().isoformat()
 
-s3_client.upload_file("./saved_models/deberta-v3-base-finetuned.zip", s3_bucket, iso_timestamp + "deberta-v3'")
+s3_client.upload_file("./saved_models/deberta-v3-base-finetuned.zip", s3_bucket, iso_timestamp + "deberta-v3")
 
 os.system('rm ./saved_models/deberta-v3-base-finetuned.zip')
