@@ -13,7 +13,8 @@ Essays represent a person's critical thinking. It provides a glimpse into a pers
     - The later approach takes a little bit longer to start the server as it downloads all the tokenizers and models before initializing the backend server. This would also help in serving every request, even the very first request for each model, in a predictive and definitive time without any anomalies.
     - It would also provide the benefit of robust availability and readiness of all the models befores serving the users.
 
-2. Storing the file paths as environment variables.
+2. Storing the project secrets in a configuration file.
+    - The paths and secrets are stored in a configuration instead of storing as environment variables
 
 
 ## Impending work 
