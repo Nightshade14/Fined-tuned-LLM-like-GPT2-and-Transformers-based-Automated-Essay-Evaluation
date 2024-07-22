@@ -5,7 +5,7 @@ def get_tokenizers_and_models():
     from dotenv import load_dotenv
 
     try:
-        load_dotenv()
+        # load_dotenv()
 
         # Load from a config directory
         load_dotenv(dotenv_path = os.path.join('config', '.env'))
