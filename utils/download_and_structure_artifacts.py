@@ -6,9 +6,9 @@ def get_tokenizers_and_models():
 
     try:
         # eventually, it will become MODEL_ID_TO_PATH_MAPPING.keys()
-        # MODELS_AND_TOKENIZERS_LIST = os.getenv("MODEL_ID_TO_PATH_MAPPING").keys()
+        MODELS_AND_TOKENIZERS_LIST = os.getenv("MODEL_ID_TO_PATH_MAPPING").keys()
         # MODELS_AND_TOKENIZERS_LIST = ["deBERTa-v3", "my_distilbert"]
-        MODELS_AND_TOKENIZERS_LIST = ["deBERTa-v3"]
+        # MODELS_AND_TOKENIZERS_LIST = ["deBERTa-v3"]
 
         # Load from a config directory
         load_dotenv(dotenv_path = os.path.join('config', '.env'))
