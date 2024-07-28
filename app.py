@@ -6,13 +6,9 @@ import traceback
 from dotenv import load_dotenv
 import os
 from data_schema.Data import Data
-from utils.artifacts_downloader import get_tokenizers_and_models
-
+from utils.download_and_structure_artifacts import get_tokenizers_and_models
 
 try:
-# Load from the root directory
-    load_dotenv()
-
     # Load from a config directory
     load_dotenv(dotenv_path = os.path.join('config', '.env'))
 
@@ -20,7 +16,6 @@ try:
     TOKENIZER_BASE_PATH = os.getenv('TOKENIZER_PATH')
 
     MODEL_ID_TO_PATH_MAPPING = os.getenv('MODEL_ID_TO_PATH_MAPPING')
-
 
     get_tokenizers_and_models()
 
