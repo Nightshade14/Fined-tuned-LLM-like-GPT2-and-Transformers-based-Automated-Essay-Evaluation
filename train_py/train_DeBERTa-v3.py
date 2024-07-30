@@ -6,7 +6,6 @@ from transformers import AutoTokenizer, TrainerCallback, AdamW, TrainingArgument
 import math
 import os
 
-
 class CosineAnnealingScheduler(TrainerCallback):
     """ Custom LR Scheduler that implements a cosine annealing schedule with warmup. """
 
@@ -55,6 +54,7 @@ def preprocess_function(examples):
     result['labels'] = examples['labels']
     return result
 
+
 def compute_metrics(p):
     predictions, labels = p
     predictions = np.argmax(predictions, axis=1)
@@ -70,11 +70,9 @@ data = pd.read_csv('./data/final_data/train.csv')
 data = data.rename(columns={'score': 'labels'})
 
 data['labels'] = data['labels'] - 1
-
 num_classes = data["labels"].nunique()
 
 tokenizer = AutoTokenizer.from_pretrained('microsoft/deberta-v3-base')
-
 
 dataset = Dataset.from_pandas(data.iloc[:,1:])
 tokenized_dataset = dataset.map(preprocess_function, batched=True)
@@ -82,7 +80,6 @@ tokenized_dataset = dataset.map(preprocess_function, batched=True)
 split_datasets = tokenized_dataset.train_test_split(test_size=0.2, shuffle=True, seed=46)
 train_dataset = split_datasets['train']
 eval_dataset = split_datasets['test']
-
 
 num_epochs = 7
 
@@ -122,34 +119,40 @@ trainer = Trainer(
 
 trainer.train()
 
-trainer.save_pretrained('./saved_models/deberta-v3-base-finetuned')
-
-os.system('zip -r ./saved_models/deberta-v3-base-finetuned.zip ./saved_models/deberta-v3-base-finetuned')
-
 import boto3
 from dotenv import load_dotenv
 
-load_dotenv()
-
-# Load from a config directory
+cwd = os.getcwd()
 load_dotenv(dotenv_path = os.path.join('config', '.env'))
 
 # Set up AWS credentials (make sure you have the necessary permissions)
 session = boto3.Session(
-    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+    aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 )
+
 s3_client = session.client('s3')
 
 # Define the S3 bucket and key for the model
 s3_bucket = os.getenv('S3_BUCKET')
-s3_model_prefix = os.getenv('S3_MODEL_PREFIX')
-s3_tokenizer_prefix = os.getenv('S3_TOKENIZER_PREFIX')
 
+s3_model_dir_path = os.getenv('S3_MODEL_DIR_PATH')
+s3_tokenizer_dir_path = os.getenv('S3_TOKENIZER_DIR_PATH')
 
-from datetime import datetime
-iso_timestamp = datetime.now().isoformat()
+local_model_dir_path = os.getenv('LOCAL_MODEL_DIR_PATH')
+local_tokenizer_dir_path = os.getenv('LOCAL_TOKENIZER_DIR_PATH')
 
-s3_client.upload_file("./saved_models/deberta-v3-base-finetuned.zip", s3_bucket, iso_timestamp + "deberta-v3")
+file_type = ".zip"
+file_action = "zip"
 
-os.system('rm ./saved_models/deberta-v3-base-finetuned.zip')
+model_name = "deBERTa-v3"
+
+tokenizer.save_pretrained(f"{cwd}{local_tokenizer_dir_path}{model_name}")
+os.system(f"{file_action} -r {cwd}{local_tokenizer_dir_path}{model_name}{file_type} {cwd}{local_tokenizer_dir_path}{model_name}")
+s3_client.upload_file(f"{cwd}{local_tokenizer_dir_path}", s3_bucket, f"{model_name}{file_type}")
+os.system(f"rm {cwd}{local_tokenizer_dir_path}{model_name}{file_type}")
+
+trainer.save_pretrained(f"{cwd}{local_model_dir_path}{model_name}")
+os.system(f"{file_action} -r {cwd}{local_model_dir_path}{model_name}{file_type} {cwd}{local_model_dir_path}{model_name}")
+s3_client.upload_file(f"{cwd}{local_model_dir_path}", s3_bucket, f"{model_name}{file_type}")
+os.system(f"rm {cwd}{local_model_dir_path}{model_name}{file_type}")
