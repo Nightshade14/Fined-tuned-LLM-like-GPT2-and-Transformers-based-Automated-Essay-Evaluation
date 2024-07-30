@@ -15,8 +15,8 @@ def get_tokenizers_and_models():
 
         # Set up AWS credentials (make sure you have the necessary permissions)
         session = boto3.Session(
-            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
+            aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
         )
         s3_client = session.client('s3')
 
