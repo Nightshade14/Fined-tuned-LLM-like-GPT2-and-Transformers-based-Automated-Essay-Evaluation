@@ -1,6 +1,8 @@
 # Fined-tuned-LLM-like-GPT2-and-Transformers-based-Automated-Essay-Evaluation
 
 ## Setup
+Do "pip install -r requirements.txt" to install all the dependencies.
+
 After configuring or setting env varoiables, simply start the server. The server will only launch if the models and tokenizers are present on AWS S3 storage. They are stored as zip files to reduce file size. The artifacts would be downlaoded, extracted (unziped), and the zip files would be deleted. After all these processes are succcessful, only then the FastAPI server will start serving requests. 
 
 Note: For experimenting with this project, you will need to store the models and tokenizers on your AWS S3 storage and you will need your own AWS credentials. The model and tokenizer's public access is blocked.
