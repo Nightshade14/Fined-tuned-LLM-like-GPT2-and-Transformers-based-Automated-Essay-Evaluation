@@ -12,6 +12,9 @@ Note: The Nginx files were for local use. The frontend was served with Nginx act
 ## Motivation
 Essays represent a person's critical thinking. It provides a glimpse into a person's mind. This serves as an approach to cultivate thoughts and ideas, and also a way to evaluate a person. This method is used by academia and educational institutions. Essay evaluation has been performed manually by humans; which is subject to many factors and could lead to inconsistency.
 
+## Working
+The user provides their essay on a web-form and also selects the AI model that will evaluate the essay. The request would be forwarded to backend fastapi server and it will evaluate the essay and send the score back to the user, below the form.
+
 ## Strategic Design Decisions
 1. We chose to load all the models and tokenizers at the start of the server, so we can serve every request within a definitive range of latency.
     - The trade-off is between postponing the download of all the supported tokenizer and models until they are asked for and serving results by all the models with a constant and definitive latency even for the first time.
@@ -26,3 +29,4 @@ Essays represent a person's critical thinking. It provides a glimpse into a pers
 ## Impending work:
 - Hosting the work live on AWS EC2 or on GitHub Pages with CI/CD with GitHub Actions.
 - Improving the Quadratic Kappa Score of the models, combat overfitting and acquire more essay data so the large models have sufficient data to train on.
+
