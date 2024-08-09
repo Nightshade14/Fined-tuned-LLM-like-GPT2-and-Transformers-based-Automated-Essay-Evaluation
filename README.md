@@ -26,7 +26,13 @@ The user provides their essay on a web-form and also selects the AI model that w
 2. Storing the project secrets in a configuration file.
     - The paths and secrets are stored in a configuration instead of storing as environment variables. Both methods provide security to the sensitive data and credentials. For local development, environment variables of multiple projects can overlap. But for production environment, the secrets must be stored as environment variables or they can be saved with AWS Secrets Manager for decentralized security and flexibility and freedom of configuring an environment.
 
+
+## Next-step:
+1. Try out Llama 3.1 8B for this use case. Its 128k context window will support large essays.
+
+
 ## Impending work:
 - Hosting the work live on AWS EC2 or on GitHub Pages with CI/CD with GitHub Actions.
 - Improving the Quadratic Kappa Score of the models, combat overfitting and acquire more essay data so the large models have sufficient data to train on.
+
 
