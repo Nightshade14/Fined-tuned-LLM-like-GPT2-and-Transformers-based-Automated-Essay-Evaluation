@@ -33,12 +33,12 @@ except Exception as e:
 
 
 @app.get("/")
-def get_home_page():
+async def get_home_page():
     return "Welcome to the router!!!"
 
 
 @app.post("/evaluate")
-def evaluate_essay(request_data: Data):
+async def evaluate_essay(request_data: Data):
     try:
         data_dict = request_data.model_dump()
         essay = data_dict.get("essay")
