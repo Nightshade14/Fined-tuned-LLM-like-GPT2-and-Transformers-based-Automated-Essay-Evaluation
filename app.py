@@ -12,10 +12,11 @@ try:
     # Load from a config directory
     load_dotenv(dotenv_path = os.path.join('config', '.env'))
 
-    MODEL_BASE_PATH = os.getenv('MODEL_PATH')
-    TOKENIZER_BASE_PATH = os.getenv('TOKENIZER_PATH')
+    MODEL_BASE_PATH = os.getenv('LOCAL_MODEL_DIR_PATH')
+    TOKENIZER_BASE_PATH = os.getenv('LOCAL_TOKENIZER_DIR_PATH')
 
     MODEL_ID_TO_PATH_MAPPING = os.getenv('MODEL_ID_TO_PATH_MAPPING')
+    print(MODEL_ID_TO_PATH_MAPPING)
 
     get_tokenizers_and_models()
 
@@ -44,6 +45,15 @@ async def evaluate_essay(request_data: Data):
         essay = data_dict.get("essay")
         model_id = data_dict.get("my_model_id")
 
+        # MODEL_ID_TO_PATH_MAPPING = dict(os.getenv('MODEL_ID_TO_PATH_MAPPING'))
+
+        # print(MODEL_ID_TO_PATH_MAPPING)
+        MODEL_ID_TO_PATH_MAPPING = {"DeBERTa-v3": "deBERTa-v3","GPT-2": "gpt-2-finetuned","LSTM": "lstm","DistilBERT": "distilBERT"}
+
+        print(TOKENIZER_BASE_PATH)
+        print(MODEL_ID_TO_PATH_MAPPING)
+        print(model_id)
+        print(MODEL_ID_TO_PATH_MAPPING.get(model_id))
         tokenizer_path = "".join([TOKENIZER_BASE_PATH, MODEL_ID_TO_PATH_MAPPING.get(model_id)])
         model_path = "".join([MODEL_BASE_PATH, MODEL_ID_TO_PATH_MAPPING.get(model_id)])
         num_classes = 6
