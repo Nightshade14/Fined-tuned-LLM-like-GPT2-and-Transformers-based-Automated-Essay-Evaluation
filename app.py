@@ -9,15 +9,25 @@ from data_schema.Data import Data
 from utils.download_and_structure_artifacts import get_tokenizers_and_models
 import json
 import time
+from fastapi_cprofile.profiler import CProfileMiddleware
+
 
 try:
     app = FastAPI()
+    app.add_middleware(CProfileMiddleware,
+        enable=True,
+        print_each_request = True,
+        strip_dirs = False,
+        sort_by='cumulative'
+    )
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
-        allow_credentials=True,
+        allow_credentials = True,
         allow_methods=["*"],
         allow_headers=["*"]
+        
     )
 
     # Load from a config directory
