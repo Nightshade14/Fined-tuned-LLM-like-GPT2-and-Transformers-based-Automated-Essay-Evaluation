@@ -32,6 +32,7 @@ The user provides their essay on a web-form and also selects the AI model that w
 
 
 ## Impending work:
+- Convert Model to ONNX and serve with TensorRT to decrease inference latency by around 2-3x
 - Hosting the work live on AWS EC2 or on GitHub Pages with CI/CD with GitHub Actions.
 - Improving the Quadratic Kappa Score of the models, combat overfitting and acquire more essay data so the large models have sufficient data to train on.
 
