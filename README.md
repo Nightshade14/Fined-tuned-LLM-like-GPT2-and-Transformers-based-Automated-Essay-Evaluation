@@ -26,6 +26,9 @@ The user provides their essay on a web-form and also selects the AI model that w
 2. Storing the project secrets in a configuration file.
     - The paths and secrets are stored in a configuration instead of storing as environment variables. Both methods provide security to the sensitive data and credentials. For local development, environment variables of multiple projects can overlap. But for production environment, the secrets must be stored as environment variables or they can be saved with AWS Secrets Manager for decentralized security and flexibility and freedom of configuring an environment.
 
+3. Using ONNX and TensorRT with warm-up to decrease latency.
+    - The models from Transformers library is in Pytorch. So, we convert the model to ONNX format which is optimized for inference. Then we use TensorRT to use GPU for model inference tasks and we again significantly decrease the inference latency.
+    - We would also use warm inputs so that all the artifacts are prperly loaded onto RAM and GPUs. And, now we will use this cached version to infer results.
 
 ## Next-step:
 1. Try out Llama 3.1 8B for this use case. Its 128k context window will support large essays.
@@ -35,5 +38,4 @@ The user provides their essay on a web-form and also selects the AI model that w
 - Convert Model to ONNX and serve with TensorRT to decrease inference latency by around 2-3x
 - Hosting the work live on AWS EC2 or on GitHub Pages with CI/CD with GitHub Actions.
 - Improving the Quadratic Kappa Score of the models, combat overfitting and acquire more essay data so the large models have sufficient data to train on.
-
-
+- We could leverage a vector database as a cache to store the vector embedddings of the input and check whether it matches with the previous queries. If it matches then we can serve cached results and the model won't be needed to infer on the redundant data. So, we need a vector database that can be leveraged and be used EFFICIENTLY as a caching system. But this would also introduce other features like cache invalidation frequency, embeddings being different but similar. If we introduce similarity matching, then we need to also narrow the down the correct technique for embedding similarity; e.g. Euclidean dist, cosine similarity, etc.
