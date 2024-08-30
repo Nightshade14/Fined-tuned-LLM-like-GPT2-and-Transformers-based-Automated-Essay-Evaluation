@@ -31,7 +31,7 @@ The user provides their essay on a web-form and also selects the AI model that w
     - We would also use warm inputs so that all the artifacts are prperly loaded onto RAM and GPUs. And, now we will use this cached version to infer results.
 
 ## Next-step:
-1. Try out Llama 3.1 8B for this use case. Its 128k context window will support large essays.
+1. Try out Llama 3.1 8B for this use case. Its 128k context window will support larger essays.
 
 
 ## Impending work:
