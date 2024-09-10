@@ -5,6 +5,7 @@ from datasets import Dataset
 from transformers import AutoTokenizer, TrainerCallback, AdamW, TrainingArguments, Trainer, AutoModelForSequenceClassification
 import math
 import os
+import torch
 
 class CosineAnnealingScheduler(TrainerCallback):
     """ Custom LR Scheduler that implements a cosine annealing schedule with warmup. """
@@ -146,6 +147,16 @@ file_type = ".zip"
 file_action = "zip"
 
 model_name = "deBERTa-v3"
+
+dummy_input = tokenizer("This is a dummy input", return_tensors="pt", padding="max_length", truncation=True, max_length=512)
+
+torch.onnx.export(model, 
+                    (dummy_input['input_ids'], dummy_input['attention_mask']), 
+                    f"{cwd}{local_model_dir_path}{model_name}", 
+                    input_names=['input_ids', 'attention_mask'], 
+                    output_names=['logits'], 
+                    dynamic_axes={'input_ids': {0: 'batch_size'}, 'attention_mask': {0: 'batch_size'}, 'logits': {0: 'batch_size'}})
+
 
 tokenizer.save_pretrained(f"{cwd}{local_tokenizer_dir_path}{model_name}")
 os.system(f"{file_action} -r {cwd}{local_tokenizer_dir_path}{model_name}{file_type} {cwd}{local_tokenizer_dir_path}{model_name}")
