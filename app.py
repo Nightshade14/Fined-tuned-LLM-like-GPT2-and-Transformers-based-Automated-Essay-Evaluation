@@ -46,8 +46,6 @@ try:
     num_classes = 6
 
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
-    # model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=num_classes)
-    # model.eval()
 
 
     
@@ -81,8 +79,6 @@ async def evaluate_essay(request_data: Data):
             input_names[0]: processed_input['input_ids'].astype(np.int64),
             input_names[1]: processed_input['attention_mask'].astype(np.int64)
         }
-
-        # print("Expected input names:", input_names.keys())
 
 
         input_feed = {

@@ -1,0 +1,21 @@
+[project]
+name = "fined-tuned-llm-like-gpt2-and-transformers-based-automated-essay-evaluation"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.35.19",
+    "datasets>=3.0.0",
+    "fastapi-cprofile>=0.0.2",
+    "fastapi[standard]>=0.114.2",
+    "matplotlib>=3.9.2",
+    "onnxruntime>=1.19.2",
+    "pandas>=2.2.2",
+    "python-dotenv>=1.0.1",
+    "ruff>=0.6.5",
+    "scikit-learn>=1.5.2",
+    "seaborn>=0.13.2",
+    "torch>=2.4.1",
+    "transformers>=4.44.2",
+]
