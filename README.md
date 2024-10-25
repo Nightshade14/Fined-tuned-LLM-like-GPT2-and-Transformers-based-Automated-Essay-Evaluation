@@ -46,3 +46,4 @@ The user provides their essay on a web-form and also selects the AI model that w
 - We could leverage a vector database as a cache to store the vector embedddings of the input and check whether it matches with the previous queries. If it matches then we can serve cached results and the model won't be needed to infer on the redundant data. So, we need a vector database that can be leveraged and be used EFFICIENTLY as a caching system. But this would also introduce other features like cache invalidation frequency, embeddings being different but similar. If we introduce similarity matching, then we need to also narrow the down the correct technique for embedding similarity; e.g. Euclidean dist, cosine similarity, etc.
 
 - Add Nginx as Reverse Proxy and load balancer to provide additional security and efficiency.
+- Re-fine-tune the models with synthetic data.
